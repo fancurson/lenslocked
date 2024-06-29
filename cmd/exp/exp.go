@@ -6,7 +6,9 @@ import (
 )
 
 type User struct {
-	Bio template.HTML
+	Bio  string
+	Name string
+	Age  int
 }
 
 func main() {
@@ -15,7 +17,9 @@ func main() {
 		panic(err)
 	}
 	user := User{
-		Bio: `<script>alert("Haha, you have been h4x0r3d!");</script>`,
+		Name: "Jon Calhoun",
+		Bio:  `<script>alert("Haha, you have been h4x0r3d!");</script>`,
+		Age:  19,
 	}
 	err = t.Execute(os.Stdout, user)
 	if err != nil {
