@@ -5,24 +5,35 @@ import (
 	"os"
 )
 
-type User struct {
-	Bio  string
-	Name string
-	Age  int
+type Widget struct {
+	Name  string
+	Price int
+}
+
+type ViewData struct {
+	Name    string
+	Widgets map[string]Widget
 }
 
 func main() {
+
 	t, err := template.ParseFiles("hello.gohtml")
 	if err != nil {
 		panic(err)
 	}
-	user := User{
-		Name: "Jon Calhoun",
-		Bio:  `<script>alert("Haha, you have been h4x0r3d!");</script>`,
-		Age:  19,
+
+	data := ViewData{
+		Name: "Vlad",
+		Widgets: map[string]Widget{
+			"a": {Name: "q", Price: 12},
+			"b": {Name: "w", Price: 13},
+			"c": {Name: "e", Price: 14},
+		},
 	}
-	err = t.Execute(os.Stdout, user)
+
+	err = t.Execute(os.Stdout, data)
 	if err != nil {
 		panic(err)
 	}
+
 }
