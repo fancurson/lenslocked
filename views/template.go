@@ -12,12 +12,14 @@ type Template struct {
 	htmlTpl *template.Template
 }
 
-func ParseFS(FS fs.FS, pattern string) (Template, error) {
-	htmlTpl, err := template.ParseFS(FS, pattern)
+func ParseFS(fs fs.FS, pattern ...string) (Template, error) {
+	htmlTpl, err := template.ParseFS(fs, pattern...)
 	if err != nil {
 		return Template{}, fmt.Errorf("parsing template: %w", err)
 	}
-	return Template{htmlTpl: htmlTpl}, nil
+	return Template{
+		htmlTpl: htmlTpl,
+	}, nil
 }
 
 func (t Template) Execute(w http.ResponseWriter, data interface{}) {
