@@ -1,0 +1,30 @@
+docker compose ls
+// посмотреть запущенные контейнеры
+
+docker ps
+//
+
+ocker compose up		 																					
+// Запуск
+
+docker compose up -d 																					
+// Запуск на фоне
+
+docker compose stop
+
+docker compose exec -it db psql -U baloo -d lenslocked       
+/*Next is the -it flag, which is actually two flags: -i and -t. We can merge
+them into a single flag in this case to save on some typing. These two flags
+are common when running docker exec as they make it so we can interact with
+the terminal session after running a command. This makes it possible to run
+SQL queries with psql after running our docker exec command, much like we
+would if psql was installed locally.
+*/
+
+psql -U baloo -d lenslocked   
+// The -U flag lets us set our username, and the -d flag lets us state which database
+// we want to connect to
+
+docker compose exec -it db psql -U baloo -d lenslocked 
+// Объединяет предыдущие 2 команды; *connect to our database*
+
