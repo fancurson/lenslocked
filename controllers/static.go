@@ -9,10 +9,13 @@ type Static struct {
 	Template Template
 }
 
+<<<<<<< HEAD
 func (s Static) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	s.Template.Execute(w, nil)
 }
 
+=======
+>>>>>>> Connecting-to-Postgres
 func StaticHandler(tpl Template) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		tpl.Execute(w, nil)
