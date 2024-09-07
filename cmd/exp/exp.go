@@ -1,53 +1,70 @@
 package main
 
 import (
-	"database/sql"
 	"fmt"
 
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/joncalhoun/lenslocked/models"
 )
 
-type PostgresConfig struct {
-	Host     string
-	Port     string
-	User     string
-	Password string
-	Database string
-	SSLMode  string
-}
-
-func (cfg PostgresConfig) String() string {
-	return fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=%s", cfg.Host, cfg.Port, cfg.User, cfg.Password, cfg.Database, cfg.SSLMode)
+func must(err error) {
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {
-	cfg := PostgresConfig{
-		Host:     "localhost",
-		Port:     "5435",
-		User:     "baloo",
-		Password: "junglebook",
-		Database: "lenslocked",
-		SSLMode:  "disable",
-	}
-	db, err := sql.Open("pgx", cfg.String())
+
+	conf := models.DefaultPostgresConfig()
+	db, err := models.OpenDB(conf)
 	must(err)
 	defer db.Close()
+
 	must(db.Ping())
+	fmt.Println("Connected")
 
-	_, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (
-		id SERIAL PRIMARY KEY,
-		name TEXT,
-		email TEXT NOT NULL
-		);
-		CREATE TABLE IF NOT EXISTS orders (
-		id SERIAL PRIMARY KEY,
-		user_id INT NOT NULL,
-		amount INT,
-		description TEXT
-		);`)
+	// email := "2@gmail.com"
+	// password := "123abc"
 
-	must(err)
-	fmt.Println("Tables created.")
+	// hashedBytes, err := bcrypt.GenerateFromPassword(
+	// 	[]byte(password), bcrypt.DefaultCost)
+	// if err != nil {
+	// 	log.Fatalf("1:%w", err)
+	// 	panic(err)
+	// }
+	// passwordHash := string(hashedBytes)
+
+	// var id int
+	// err = db.QueryRow(`
+	// insert into users(email, password_hash)
+	// values ($1, $2) returning id`, email, passwordHash).Scan(&id)
+	// if err != nil {
+	// 	log.Fatalf("2:%w", err)
+	// 	panic(err)
+	// }
+	// fmt.Printf("id: %d", id)
+
+	// us := models.UserService{
+	// 	DB: db,
+	// }
+	// user, err := us.Create("1@mail", "123abc")
+	// must(err)
+	// fmt.Printf("%+v", user)
+
+	// _, err = db.Exec(`CREATE TABLE IF NOT EXISTS users (
+	// 	id SERIAL PRIMARY KEY,
+	// 	name TEXT,
+	// 	email TEXT NOT NULL
+	// 	);
+	// 	CREATE TABLE IF NOT EXISTS orders (
+	// 	id SERIAL PRIMARY KEY,
+	// 	user_id INT NOT NULL,
+	// 	amount INT,
+	// 	description TEXT
+	// 	);`)
+
+	// must(err)
+	// fmt.Println("Tables created.")
 
 	// name := "Jon Calhoun"
 	// email := "jon@calhoun.io"
@@ -98,37 +115,31 @@ func main() {
 	// 	must(err)
 	// }
 	// fmt.Println("Created fake orders.")
-	type Order struct {
-		ID          int
-		UserID      int
-		Amount      int
-		Description string
-	}
-	var orders []Order
-	userID := 1 // Use the same ID you used in the previous lesson
-	rows, err := db.Query(`
-	SELECT id, amount, description
-	FROM orders
-	WHERE user_id=$1`, userID)
-	must(err)
-	defer rows.Close()
+	// 	type Order struct {
+	// 		ID          int
+	// 		UserID      int
+	// 		Amount      int
+	// 		Description string
+	// 	}
+	// 	var orders []Order
+	// 	userID := 1 // Use the same ID you used in the previous lesson
+	// 	rows, err := db.Query(`
+	// 	SELECT id, amount, description
+	// 	FROM orders
+	// 	WHERE user_id=$1`, userID)
+	// 	must(err)
+	// 	defer rows.Close()
 
-	for rows.Next() {
-		var order Order
-		order.UserID = userID
-		err := rows.Scan(&order.ID, &order.Amount, &order.Description)
-		must(err)
-		orders = append(orders, order)
-	}
-	must(rows.Err())
-	fmt.Printf("Orders:%+v", orders)
-
-}
-
-func must(err error) {
-	if err != nil {
-		panic(err)
-	}
+	// 	for rows.Next() {
+	// 		var order Order
+	// 		order.UserID = userID
+	// 		err := rows.Scan(&order.ID, &order.Amount, &order.Description)
+	// 		must(err)
+	// 		orders = append(orders, order)
+	// 	}
+	// 	must(rows.Err())
+	// 	fmt.Printf("Orders:%+v", orders)
+	// }
 }
 
 /*

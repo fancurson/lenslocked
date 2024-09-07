@@ -30,3 +30,4 @@ psql -U baloo -d lenslocked
 docker compose exec -it db psql -U baloo -d lenslocked 
 // Объединяет предыдущие 2 команды; *connect to our database*
 
+

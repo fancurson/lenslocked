@@ -5,9 +5,9 @@ import (
 	"net/http"
 )
 
-type Static struct {
-	Template Template
-}
+// type Static struct {
+// 	Template Template
+// }
 
 func StaticHandler(tpl Template) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
